@@ -486,7 +486,8 @@ void regravarArquivoLivros(Node *root)
   printf("Dados salvos com sucesso!\n");
 }
 //
-void exclusionUser(char *emailBusca){
+void exclusionUser(char *emailBusca)
+{
   FILE *arqOriginal = fopen("usuarios.txt", "r");
   FILE *arqTemp = fopen("temp.txt", "w");
 
@@ -527,37 +528,80 @@ void exclusionUser(char *emailBusca){
   }
 }
 //
-Node *exclusionBook(Node *root, int id) {
-  if (root == NULL) {
-    return root; 
+Node *exclusionBook(Node *root, int id)
+{
+  if (root == NULL)
+  {
+    return root;
   }
   // verifica se o id é menor
-  if (id < root->livros.codigo) {
+  if (id < root->livros.codigo)
+  {
     root->left = exclusionBook(root->left, id);
-  }   // verifica se o id é maior
-  else if (id > root->livros.codigo) {
+  } // verifica se o id é maior
+  else if (id > root->livros.codigo)
+  {
     root->right = exclusionBook(root->right, id);
-  } 
-  else { // ele encontrou, agora verifica se o da esquerda é nulo
-    if (root->left == NULL) {
+  }
+  else
+  { // ele encontrou, agora verifica se o da esquerda é nulo
+    if (root->left == NULL)
+    {
       Node *temp = root->right;
       free(root);
       return temp; // esquerda nula, ele exclui o nó e retorna o da direita
-    } 
-    else if (root->right == NULL) {
+    }
+    else if (root->right == NULL)
+    {
       Node *temp = root->left;
       free(root);
       return temp; // direita nula, ele exclui o nó e retorna o da esquerda
     }
 
-    Node *temp = root->right; //vai para a direita
-    while (temp->left != NULL) {
-      temp = temp->left;  // percorre a esquerda
+    Node *temp = root->right; // vai para a direita
+    while (temp->left != NULL)
+    {
+      temp = temp->left; // percorre a esquerda
     }
 
-    root->livros = temp->livros; //duplico o nó, jogando o temporário no root
+    root->livros = temp->livros; // duplico o nó, jogando o temporário no root
 
     root->right = exclusionBook(root->right, temp->livros.codigo); // agora desce na direita e apaga o de baixo
   }
   return root;
+}
+//
+void lendingBook(Node *root, int id, char *email)
+{
+  if (root == NULL)
+  {
+    printf("Bilbioteca vazia!\n");
+    return;
+  }
+
+  Node *livroAlvo = searchTree(root, id);
+
+  if (livroAlvo == NULL)
+  {
+    printf("Erro: Livro não encontrado no sistema!\n");
+  }
+  else if (livroAlvo->livros.status == false)
+  {
+    printf("Erro: O livro %s já está emprestado\n", livroAlvo->livros.titulo);
+  }
+  else
+  {
+    printf("Realizando validação");
+    if (buscarUsuarioPorEmail(email) == 1)
+    {
+      livroAlvo->livros.status = false;
+      strcpy(livroAlvo->livros.usuario.email, email);
+
+      printf("\nEmpréstimo do livro '%s' realizado com sucesso!\n", livroAlvo->livros.titulo);
+    }
+    else
+    {
+      printf("\nErro: Empréstimo cancelado!\nUsuário não possui cadastro!\n");
+    }
+  }
 }

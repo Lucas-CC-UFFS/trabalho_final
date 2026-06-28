@@ -15,7 +15,7 @@ int main()
   while (op != 0)
   {
     printf("\n====== BIBLIOTECA ======\n");
-    printf("Digite a opção desejada:\n1- Cadastro\n2- Consulta\n3- Atualização\n4- Exclusão\n0- Sair\n");
+    printf("Digite a opção desejada:\n1- Cadastro\n2- Consulta\n3- Atualização\n4- Exclusão\n5- Empréstimo\n6- Devolução\n0- Sair\n");
     scanf("%d", &op);
     switch (op)
     {
@@ -231,15 +231,18 @@ int main()
         case 1:
           printf("Digite o ID do livro a ser excluído:");
           scanf("%d", &idBookEx);
-          while (getchar() != '\n' && getchar() != EOF);
+          while (getchar() != '\n' && getchar() != EOF)
+            ;
           int encontrou = 0;
-          buscaPorCodigo(root,idBookEx, &encontrou);
+          buscaPorCodigo(root, idBookEx, &encontrou);
           if (encontrou == 1)
           {
-           root = exclusionBook(root, idBookEx);
-           printf("Livro excluído com sucesso!\n");
-          }else {
-          printf("Erro: Livro não encontrado\n");
+            root = exclusionBook(root, idBookEx);
+            printf("Livro excluído com sucesso!\n");
+          }
+          else
+          {
+            printf("Erro: Livro não encontrado\n");
           }
 
           break;
@@ -256,6 +259,23 @@ int main()
       break;
     case 5:
       // empréstimo
+      {
+        int idEmprestimo;
+        char emailEmprestimo[100];
+
+        printf("\n====== Empréstimo de Livro ======\n");
+
+        printf("Digite o código do livro: ");
+        scanf("%d", &idEmprestimo);
+        while (getchar() != '\n' && getchar() != EOF);
+
+        printf("Digite o e-mail do usuário: ");
+        fgets(emailEmprestimo, sizeof(emailEmprestimo), stdin);
+        linhaLimpa(emailEmprestimo);
+
+        lendingBook(root, idEmprestimo, emailEmprestimo);
+      }
+
       break;
     case 6:
       // devolução
