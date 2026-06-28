@@ -1,2 +1,1 @@
-lucas the creat,lucas,2026,123,1,lucas@gmail.com
 Lucas the goat,Lucas,2020,456,1,lucas_2@gmail.com

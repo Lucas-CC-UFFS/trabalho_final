@@ -485,3 +485,79 @@ void regravarArquivoLivros(Node *root)
   fclose(arquivo);
   printf("Dados salvos com sucesso!\n");
 }
+//
+void exclusionUser(char *emailBusca){
+  FILE *arqOriginal = fopen("usuarios.txt", "r");
+  FILE *arqTemp = fopen("temp.txt", "w");
+
+  if (arqOriginal == NULL || arqTemp == NULL)
+  {
+    printf("Erro ao acessar os arquivos de usuário.\n");
+    return;
+  }
+
+  char nome[150], email[100];
+  int encontrou = 0;
+
+  while (fscanf(arqOriginal, "%[^,],%[^\n]\n", nome, email) == 2)
+  {
+    if (strcmp(email, emailBusca) == 0)
+    {
+      encontrou = 1;
+      printf("Usuário excluído com sucesso!");
+    }
+    else
+    {
+      fprintf(arqTemp, "%s,%s\n", nome, email);
+    }
+  }
+
+  fclose(arqOriginal);
+  fclose(arqTemp);
+
+  if (encontrou == 0)
+  {
+    printf("Usuário não encontrado!\n");
+    remove("temp.txt"); // remove() peguei com IA, tava usando fclose só
+  }
+  else
+  {
+    remove("usuarios.txt");
+    rename("temp.txt", "usuarios.txt");
+  }
+}
+//
+Node *exclusionBook(Node *root, int id) {
+  if (root == NULL) {
+    return root; 
+  }
+  // verifica se o id é menor
+  if (id < root->livros.codigo) {
+    root->left = exclusionBook(root->left, id);
+  }   // verifica se o id é maior
+  else if (id > root->livros.codigo) {
+    root->right = exclusionBook(root->right, id);
+  } 
+  else { // ele encontrou, agora verifica se o da esquerda é nulo
+    if (root->left == NULL) {
+      Node *temp = root->right;
+      free(root);
+      return temp; // esquerda nula, ele exclui o nó e retorna o da direita
+    } 
+    else if (root->right == NULL) {
+      Node *temp = root->left;
+      free(root);
+      return temp; // direita nula, ele exclui o nó e retorna o da esquerda
+    }
+
+    Node *temp = root->right; //vai para a direita
+    while (temp->left != NULL) {
+      temp = temp->left;  // percorre a esquerda
+    }
+
+    root->livros = temp->livros; //duplico o nó, jogando o temporário no root
+
+    root->right = exclusionBook(root->right, temp->livros.codigo); // agora desce na direita e apaga o de baixo
+  }
+  return root;
+}

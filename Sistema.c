@@ -10,12 +10,12 @@ int main()
   //
   Book livro;
   //
-  int op = -1, option = -1, alt = -1;
+  int op = -1, option = -1, alt = -1, alternativa = -1;
 
   while (op != 0)
   {
     printf("\n====== BIBLIOTECA ======\n");
-    printf("Digite a opção desejada:\n1- Cadastro\n2- Consulta\n3- Atualização\n0- Sair\n");
+    printf("Digite a opção desejada:\n1- Cadastro\n2- Consulta\n3- Atualização\n4- Exclusão\n0- Sair\n");
     scanf("%d", &op);
     switch (op)
     {
@@ -216,6 +216,43 @@ int main()
       break;
     case 4:
       // exclusão
+      alternativa = -1;
+      // atualização
+      int idBookEx;
+      char emailEx[150];
+      while (alternativa != 0)
+      {
+        printf("\n=== Exclusão de dados ===\n1- Livros\n2- Usuários\n0 - Voltar\nDigite:");
+        scanf("%d", &alternativa);
+        while (getchar() != '\n' && getchar() != EOF)
+          ;
+        switch (alternativa)
+        {
+        case 1:
+          printf("Digite o ID do livro a ser excluído:");
+          scanf("%d", &idBookEx);
+          while (getchar() != '\n' && getchar() != EOF);
+          int encontrou = 0;
+          buscaPorCodigo(root,idBookEx, &encontrou);
+          if (encontrou == 1)
+          {
+           root = exclusionBook(root, idBookEx);
+           printf("Livro excluído com sucesso!\n");
+          }else {
+          printf("Erro: Livro não encontrado\n");
+          }
+
+          break;
+        case 2:
+          printf("Digite o e-mail do usuário a ser excluído:");
+          fgets(emailEx, sizeof(emailEx), stdin);
+          linhaLimpa(emailEx);
+          exclusionUser(emailEx);
+          break;
+        case 0:
+          break;
+        }
+      }
       break;
     case 5:
       // empréstimo

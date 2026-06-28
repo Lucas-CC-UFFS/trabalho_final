@@ -79,3 +79,7 @@ void updateUser(char *);
 void regravarArquivoLivros(Node *);
 //
 void salvarArquivoNovo(Node *, FILE *);
+//
+void exclusionUser(char *);
+//
+Node *exclusionBook(Node *, int);
