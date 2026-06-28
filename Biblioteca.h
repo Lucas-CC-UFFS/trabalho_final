@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+
 struct tuser {
   char email[100];
   char nome[150];
@@ -9,15 +14,28 @@ struct tbook{
   char autor[150];
   int anoPublicacao;
   int codigo; //id unico
-  bool status //disponível ou emprestado
+  bool status; //disponível(true) ou emprestado(false)
   User usuario;
 };
 typedef struct tbook Book;
-//Usuário
-User setUser(*User, char,char);
+//
+//Usuarios
+void setUser(User *, char*,char*);
 //
 char getUser(User);
 //
+//Livros
+void setBook(Book *, char*,char*, int, int, bool, char*);
 
-//Liros
-Book setBook(*book, char,char, int, int, bool, User);
+//Funções
+void linhaLimpa(char *);
+//
+void salvarLivro(Book *);
+//
+void salvarUsuario(User *);
+//
+void lerArquivos(char *);
+//
+void cadastraUsuario(User *);
+//
+void cadastraLivro(Book *);
