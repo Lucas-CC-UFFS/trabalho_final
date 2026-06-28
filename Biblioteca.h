@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-//Structs
+// Structs
 struct tuser
 {
   char email[100];
@@ -21,13 +21,14 @@ struct tbook
 };
 typedef struct tbook Book;
 //
-struct nodeTree{
+struct nodeTree
+{
   Book livros;
   struct nodeTree *left;
   struct nodeTree *right;
 };
 typedef struct nodeTree Node;
-//Arvore
+// Arvore
 Node *initTree();
 //
 Node *creatNode(Book newBook);
@@ -38,7 +39,7 @@ Node *searchTree(Node *, int);
 //
 void showInOrder(Node *);
 //
-Node *loadTree(Node *, char*); 
+Node *loadTree(Node *, char *);
 //
 void freeNode(Node *);
 // Usuarios
@@ -60,11 +61,21 @@ void lerArquivos(char *);
 void cadastraUsuario(User *);
 //
 void cadastraLivro(Book *);
-//Buscas
-void buscaPorCodigo(Node *, int , int *);
+// Buscas
+void buscaPorCodigo(Node *, int, int *);
 //
 void buscarPorAutor(Node *, char *, int *);
 //
 int buscarUsuarioPorEmail(char *);
 //
 int buscarUsuarioPorNome(char *);
+//
+void buscarLivrosEmprestados(Node *, char *, int *);
+//
+void updateBook(Node *, int);
+//
+void updateUser(char *);
+//
+void regravarArquivoLivros(Node *);
+//
+void salvarArquivoNovo(Node *, FILE *);
