@@ -33,17 +33,17 @@ int main()
         {
         // MENU CADASTRO
         case 1:
-          cadastraLivro(&livro);
+          cadastraLivro(&livro, root);
           root = insertTree(root, livro);
           break;
         case 2:
           cadastraUsuario(&usuario);
           break;
         case 0:
-          break; // Sai do switch interno para o while poder encerrar
+          break;
         }
-      } // AQUI fecha o while (option != 0)
-      break; // AQUI é o break verdadeiro do 'case 1' do menu principal!
+      }
+      break;
     case 2:
       // consulta
       {
@@ -279,11 +279,23 @@ int main()
       break;
     case 6:
       // devolução
+      {
+        int idDevolucao;
+
+        printf("\n====== Devolução de Livro ======\n");
+        printf("Digite o código do livro a ser devolvido: ");
+        scanf("%d", &idDevolucao);
+        while (getchar() != '\n' && getchar() != EOF);
+
+        devolutionBook(root, idDevolucao);
+      }
       break;
     case 0:
-      printf("Sistema encerrado!\n");
+      printf("Finalizando o sistema!\n");
       regravarArquivoLivros(root);
       freeNode(root);
+      printf("Memoria do sistema limpa\n");
+      printf("Sistema finalizado!\n");
       exit(1);
     }
   }

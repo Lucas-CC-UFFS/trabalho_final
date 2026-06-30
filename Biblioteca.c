@@ -5,7 +5,7 @@ void setUser(User *usuario, char *nome, char *email)
   strcpy(usuario->nome, nome);
   strcpy(usuario->email, email);
 }
-
+//
 void setBook(Book *livro, char *titulo, char *autor, int anoPublicacao, int codigo, bool status, char *usuarioEmail)
 {
   strcpy(livro->titulo, titulo);
@@ -15,7 +15,6 @@ void setBook(Book *livro, char *titulo, char *autor, int anoPublicacao, int codi
   livro->status = status;
   strcpy(livro->usuario.email, usuarioEmail);
 }
-
 // Métodos
 void linhaLimpa(char *linhas)
 {
@@ -56,7 +55,7 @@ void salvarUsuario(User *usuario)
   // https://linguagemc.com.br/arquivos-em-c-categoria-usando-arquivos/
 }
 
-void cadastraUsuario(User *usuario)
+int cadastraUsuario(User *usuario)
 {
   printf("\nCadastro de Usuário:\n");
   printf("Digite o nome do usuário\n");
@@ -64,36 +63,57 @@ void cadastraUsuario(User *usuario)
   //
   printf("Digite o e-mail do usuário\n");
   fgets(usuario->email, sizeof(usuario->email), stdin);
+  linhaLimpa(usuario->email);
+  //
+  if (buscarUsuarioPorEmail(usuario->email) == 1)
+  {
+    printf("\nErro: Este e-mail já está cadastrado no sistema!\nCadastro cancelado.\n");
+    return 0;
+  }
   //
   setUser(usuario, usuario->nome, usuario->email);
   //
   salvarUsuario(usuario);
   //
   printf("Usuário salvo com sucesso!");
+  return 1;
 }
 
-void cadastraLivro(Book *livro)
+int cadastraLivro(Book *livro, Node *root)
 {
   printf("\nCadastro de Livro:\n");
-  printf("Digite o titulo: \n");
-  fgets(livro->titulo, sizeof(livro->titulo), stdin);
-  printf("Digite o autor:\n");
-  fgets(livro->autor, sizeof(livro->autor), stdin);
-  printf("Digite o ano da publicação:\n");
-  scanf("%d", &livro->anoPublicacao);
   printf("Digite o código:\n");
   scanf("%d", &livro->codigo);
   while (getchar() != '\n' && getchar() != EOF)
     ;
-  printf("Digite o email do usuário:\n");
-  fgets(livro->usuario.email, sizeof(livro->usuario.email), stdin);
+  if (searchTree(root, livro->codigo) != NULL)
+  {
+    printf("\nErro: Já existe um livro com o código %d no sistema!\nCadastro cancelado.\n", livro->codigo);
+    return 0;
+  }
+
+  printf("Digite o titulo: \n");
+  fgets(livro->titulo, sizeof(livro->titulo), stdin);
+  linhaLimpa(livro->titulo);
+  //
+  printf("Digite o autor:\n");
+  fgets(livro->autor, sizeof(livro->autor), stdin);
+  linhaLimpa(livro->autor);
+  //
+  printf("Digite o ano da publicação:\n");
+  scanf("%d", &livro->anoPublicacao);
+  while (getchar() != '\n' && getchar() != EOF)
+    ;
+  //
   livro->status = true;
   //
+  strcpy(livro->usuario.email, "Nenhum");
   setBook(livro, livro->titulo, livro->autor, livro->anoPublicacao, livro->codigo, livro->status, livro->usuario.email);
   //
   salvarLivro(livro);
   //
   printf("\nLivro cadastrado com sucesso!\n");
+  return 1;
 }
 
 void lerArquivos(char *nomeArquivo)
@@ -118,12 +138,7 @@ void lerArquivos(char *nomeArquivo)
   fclose(pont_arq);
   // https://linguagemc.com.br/arquivos-em-c-categoria-usando-arquivos/
 }
-// essa aqui provavelmente vou apagar
-Node *initNode()
-{
-  return NULL;
-}
-//
+// Arvore
 Node *creatNode(Book newBook)
 {
   // aloca memória
@@ -227,7 +242,6 @@ void freeNode(Node *root)
   freeNode(root->left);
   freeNode(root->right);
   free(root);
-  printf("Memória limpa!\n");
 }
 //
 void buscarPorAutor(Node *root, char *buscaAutor, int *encontrou)
@@ -351,7 +365,7 @@ void updateBook(Node *root, int id)
 
   else
   {
-    printf("\n--- Atualizando Livro: %s ---\n", livro->livros.titulo);
+    printf("\n=== Atualizando Livro: %s ===\n", livro->livros.titulo);
     printf("Atualizar:\n1- Titulo\n2- Autor\n3- Ano da publicação\n4- Todos os dados\nDigite:");
     scanf("%d", &op);
     while (getchar() != '\n' && getchar() != EOF)
@@ -569,6 +583,7 @@ Node *exclusionBook(Node *root, int id)
     root->right = exclusionBook(root->right, temp->livros.codigo); // agora desce na direita e apaga o de baixo
   }
   return root;
+  // https://www.freecodecamp.org/portuguese/news/arvores-binarias-de-busca-bst-explicada-com-exemplos/
 }
 //
 void lendingBook(Node *root, int id, char *email)
@@ -603,5 +618,33 @@ void lendingBook(Node *root, int id, char *email)
     {
       printf("\nErro: Empréstimo cancelado!\nUsuário não possui cadastro!\n");
     }
+  }
+}
+//
+void devolutionBook(Node *root, int id)
+{
+  if (root == NULL)
+  {
+    printf("Biblioteca vazia!\n");
+    return;
+  }
+
+  Node *livro = searchTree(root, id);
+
+  if (livro == NULL)
+  {
+    printf("Erro: Livro não encontrado no sistema!\n");
+  }
+  else if (livro->livros.status == true)
+  {
+    printf("O livro %s não está emprestado!\n", livro->livros.titulo);
+  }
+  else
+  {
+    livro->livros.status = true;
+
+    printf("\nRecebido o livro %s do usuário: %s\n", livro->livros.titulo, livro->livros.usuario.email);
+    strcpy(livro->livros.usuario.email, "Nenhum");
+    printf("Devolução realizada com sucesso!\n");
   }
 }

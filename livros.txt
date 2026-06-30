@@ -1,2 +1,1 @@
-Lucas the creat,Lucas,2020,123,0,lucas@gmail.com
-Lucas the goat,Lucas,2020,456,1,lucas_2@gmail.com
+O Hobbit,Tolkien,1937,101,1,Nenhum

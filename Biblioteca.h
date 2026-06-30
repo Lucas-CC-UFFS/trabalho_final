@@ -1,3 +1,4 @@
+// Lucas Vitório Dorneles Albuquerque
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -15,8 +16,8 @@ struct tbook
   char titulo[100];
   char autor[150];
   int anoPublicacao;
-  int codigo;  // id unico
-  bool status; // disponível(true) ou emprestado(false)
+  int codigo;
+  bool status;
   User usuario;
 };
 typedef struct tbook Book;
@@ -58,9 +59,9 @@ void salvarUsuario(User *);
 //
 void lerArquivos(char *);
 //
-void cadastraUsuario(User *);
+int cadastraUsuario(User *);
 //
-void cadastraLivro(Book *);
+int cadastraLivro(Book *, Node *);
 // Buscas
 void buscaPorCodigo(Node *, int, int *);
 //
@@ -85,3 +86,5 @@ void exclusionUser(char *);
 Node *exclusionBook(Node *, int);
 //
 void lendingBook(Node *, int, char *);
+//
+void devolutionBook(Node *, int);
